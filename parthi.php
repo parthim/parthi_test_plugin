@@ -36,9 +36,23 @@ if(!function_exists('add_action')) {
     exit;
 }
 class parthi {
-function __construct () {
-    add_action( 'init',array($this,'custom_post_type' ));
-}
+
+    //  //  Visibility of a function
+    //  private
+    //  protected
+    //  public
+    function __construct () {
+        add_action( 'init',array($this,'custom_post_type' ));
+    }
+
+    //function to call all the remaining function
+    function register ()
+    {
+        // For backend
+        add_action( 'admin_enqueue_scripts',array($this,'enqueue'));
+        // For frontend
+        //  // add_action( 'wp_enqueue_scripts',array($this,'enqueue'));
+    }
 
     function activate() {
         // generate a CPT
@@ -58,11 +72,20 @@ function __construct () {
     function custom_post_type() {
         register_post_type('book',['public'=>true, 'label'=>'Books']);
     }
+    function enqueue(){
+        // enqueue all of the style
+        wp_enqueue_style( 'myPluginStyle', plugins_url( '/assets/style.css', __FILE__ ) );
         
+        //enqueue all the scripts
+        wp_enqueue_script( 'myPluginScript', plugins_url( '/assets/script.js', __FILE__ ) );
+
+        
+    }    
 
 }
 if (class_exists('parthi')){
 $parthi  = new parthi();
+$parthi ->register();
 }
 //activation
 register_activation_hook(__FILE__,array($parthi,'activate'));
