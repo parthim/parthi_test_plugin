@@ -5,8 +5,8 @@
 /*
 Plugin Name: parthi test-plugin
 Plugin URI: https://www.example.com/
-Description: Used by millions, Akismet is quite possibly the best way in the world to <strong>protect your blog from spam</strong>. It keeps your site protected even while you sleep. To get started: activate the Akismet plugin and then go to your Akismet Settings page to set up your API key.
-Version: 4.1.7
+Description: This is a test plugin created to learn how to develop a plugin in wordpress.
+Version: 0.1
 Author: Parthiban
 Author URI: https://www.example.com/
 License: GPLv2 or later
@@ -50,20 +50,25 @@ class parthi {
     {
         // For backend
         add_action( 'admin_enqueue_scripts',array($this,'enqueue'));
+        add_action( 'admin_menu',array($this,'add_admin_pages') );
         // For frontend
         //  // add_action( 'wp_enqueue_scripts',array($this,'enqueue'));
     }
-
-    function activate() {
-        // generate a CPT
-        $this ->custom_post_type();
-        // flush rewrite rules
-        flush_rewrite_rules();  
+    
+    // add_admin_pages function
+    function add_admin_pages () {
+        add_menu_page( 'Parthi Plugin', 'Parthi', 'manage_options', 'parthiii_plugin', array($this,'admin_index'), 'dashicons-store', 110 );
+    }
+    function admin_index() {
+        // require templates
+        require_once plugin_dir_path( __FILE__ ).'templates/admin.php';
     }
 
     function deactivate() {
         // flush rewrite rules
-        flush_rewrite_rules();
+        require_once plugin_dir_path( __FILE__ ).'inc/parthi_plugin_deactivate.php';
+        //calling the function in deactivate.php directly or go down to deactivate for another way of calling
+        plugin_deactivate :: deactivate();    
     }
     // function uninstall() {
     //     //Delete CPT
@@ -87,11 +92,25 @@ if (class_exists('parthi')){
 $parthi  = new parthi();
 $parthi ->register();
 }
-//activation
-register_activation_hook(__FILE__,array($parthi,'activate'));
+//activation function called from another file
+require_once plugin_dir_path( __FILE__ ).'inc/parthi_plugin_activate.php';
+register_activation_hook(__FILE__,array('plugin_activate','activate'));
 
-// deactivate
-register_deactivation_hook(__FILE__,array($parthi,'deactivate'));
+// deactivate calling a function in this php which calls another function from another php file
+//  //  register_deactivation_hook(__FILE__,array($parthi,'deactivate'));
 
 //uninstall
-// register_uninstall_hook(__FILE__,array($parthi,'uninstall'));
+register_uninstall_hook(__FILE__,array($parthi,'uninstall'));
+
+
+// // Static method
+
+// // // class example {
+    // // //     public static function exp ($data){
+    // // //         echo "<script>console.log('Hello " . $data . "' );</script>";
+    // // //     }
+// // //    }
+
+// calling a static function without any objects or initializing a class
+
+    // // example :: exp("World");
