@@ -3,7 +3,9 @@
  * @package parthi
  */
  
-class plugin_deactivate {
+namespace Inc;
+
+class Deactivate {
     public static function deactivate() {
         // generate a CPT
         // flush rewrite rules

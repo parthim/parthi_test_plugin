@@ -1,0 +1,17 @@
+{
+    "name": "parthi/parthi",
+    "description": "Test wordpress plugin development",
+    "type": "project",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Parthiban",
+            "email": "parthiban@tealorca.in"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {"Inc\\":"./inc"}
+    }
+}

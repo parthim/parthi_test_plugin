@@ -30,18 +30,32 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Copyright 2005-2015 Automattic, Inc.
 */
+// Only comments
+
+//  //  php code commented out for future or reference purpose
+
 
 if(!function_exists('add_action')) {
     echo "Access Denied";
     exit;
 }
+if(file_exists(dirname(__FILE__).'/vendor/autoload.php')) {
+    require_once dirname(__FILE__).'/vendor/autoload.php';
+}
+
+use Inc\Activate;
+use Inc\DeActivate;
+use Inc\Admin\AdminPages;
+
 class parthi {
 
-    //  //  Visibility of a function
+    //  Visibility of a function
     //  private
     //  protected
     //  public
+    public $BasePath;
     function __construct () {
+        $this-> BasePath =plugin_basename( __FILE__ );
         add_action( 'init',array($this,'custom_post_type' ));
     }
 
@@ -51,8 +65,18 @@ class parthi {
         // For backend
         add_action( 'admin_enqueue_scripts',array($this,'enqueue'));
         add_action( 'admin_menu',array($this,'add_admin_pages') );
+        
         // For frontend
         //  // add_action( 'wp_enqueue_scripts',array($this,'enqueue'));
+        
+        add_filter( "plugin_action_links_$this->BasePath",array($this,'settings_link') );
+    }
+    //for filter plugin action link
+    function settings_link ($links) {
+        //add custom settings link
+        $setting_link = '<a href="admin.php ?page=parthiii_plugin">Settings</a>';
+        array_push($links, $setting_link);
+        return $links;
     }
     
     // add_admin_pages function
@@ -63,17 +87,17 @@ class parthi {
         // require templates
         require_once plugin_dir_path( __FILE__ ).'templates/admin.php';
     }
-
+    //Activate Function
+    function activate(){
+        Activate :: activate();
+    }
+    // // Deactivate function
     function deactivate() {
         // flush rewrite rules
-        require_once plugin_dir_path( __FILE__ ).'inc/parthi_plugin_deactivate.php';
+        //  //  require_once plugin_dir_path( __FILE__ ).'inc/parthi_plugin_deactivate.php';
         //calling the function in deactivate.php directly or go down to deactivate for another way of calling
-        plugin_deactivate :: deactivate();    
+        DeActivate :: deactivate();    
     }
-    // function uninstall() {
-    //     //Delete CPT
-    //     // Delete all the plugin data from the DB     // No need for a seperate uninstall method instead use a seperate php file named uinstall.php
-    // }
     function custom_post_type() {
         register_post_type('book',['public'=>true, 'label'=>'Books']);
     }
@@ -93,11 +117,13 @@ $parthi  = new parthi();
 $parthi ->register();
 }
 //activation function called from another file
-require_once plugin_dir_path( __FILE__ ).'inc/parthi_plugin_activate.php';
-register_activation_hook(__FILE__,array('plugin_activate','activate'));
+//  //  require_once plugin_dir_path( __FILE__ ).'inc/parthi_plugin_activate.php';
+//  //  register_activation_hook(__FILE__,array('plugin_activate','activate'));
+// Activate.php is called using composer autoload
 
 // deactivate calling a function in this php which calls another function from another php file
 //  //  register_deactivation_hook(__FILE__,array($parthi,'deactivate'));
+// DeActivate.php is called using composer autoload
 
 //uninstall
 register_uninstall_hook(__FILE__,array($parthi,'uninstall'));

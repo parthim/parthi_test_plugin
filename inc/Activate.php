@@ -2,8 +2,10 @@
 /**
  * @package parthi
  */
+
+ namespace Inc;
  
-class plugin_activate {
+class Activate {
     public static function activate() {
         // generate a CPT
         // flush rewrite rules
