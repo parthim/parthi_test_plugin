@@ -2,11 +2,11 @@
 /**
  * @package parthi
  */
-
- namespace Inc;
  
-class Activate {
-    public static function activate() {
+namespace Inc\Base;
+
+class Deactivate {
+    public static function deactivate() {
         // generate a CPT
         // flush rewrite rules
         flush_rewrite_rules();  
